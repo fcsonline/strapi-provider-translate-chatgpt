@@ -1,5 +1,10 @@
 # ChatGPT provider for Strapi Translate Plugin
 
+## About this Fork
+
+This is a fork of the [strapi-provider-translate-chatgpt](https://github.com/Braunmann/strapi-provider-translate-chatgpt) plugin by Braunmann. 
+This version includes updates for working with the latest versions of OpenAI API.
+
 Configure the provider through the pluginOptions:
 
 ```js
@@ -17,7 +22,9 @@ module.exports = {
         // use base path - default: 'https://api.openai.com/v1'
         basePath: 'https://api.openai.com/v1',
         // model - default: 'text-davinci-003'
-        model: 'text-davinci-003', 
+        model: 'text-davinci-003',
+        // systemMessage - System message provied to OpenAI - default : 'You are a professional translator.'
+        systemMessage: 'You are a professional translator.',
         // max tokens used per one translate operation - default: 1000 
         maxTokens: 1000,
         // use custom locale mapping (for example 'en' locale is deprecated so need to choose between 'EN-GB' and 'EN-US')

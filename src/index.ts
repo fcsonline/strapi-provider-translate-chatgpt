@@ -9,6 +9,7 @@ export const name = 'ChatGPT';
 interface IProviderOptions {
   apiKey?: string;
   model?: string;
+  systemMessage?: string;
   basePath?: string;
   localeMap?: object;
   maxTokens?: number;
@@ -33,11 +34,12 @@ export interface IProvider {
 class ProviderOptions {
   readonly apiKey: string;
   readonly model: string;
+  readonly systemMessage: string;
   readonly basePath: string;
   readonly localeMap: object;
   readonly maxTokens: number;
 
-  constructor({ apiKey, model, basePath, localeMap, maxTokens }: IProviderOptions) {
+  constructor({ apiKey, model, basePath, localeMap, maxTokens, systemMessage }: IProviderOptions) {
     if (!apiKey) throw new Error(`apiKey is not defined`);
     if (!model) throw new Error(`model is not defined`);
     if (!basePath) throw new Error(`basePath is not defined`);
@@ -47,16 +49,19 @@ class ProviderOptions {
     this.apiKey = apiKey;
     this.model = model;
     this.basePath = basePath;
+
+    this.systemMessage = systemMessage || 'You are a professional translator.';
   }
 }
 
-export const init = ({ apiKey, model, basePath, localeMap, maxTokens }: IProviderOptions = {}): IProvider => {
+export const init = ({ apiKey, model, basePath, localeMap, maxTokens, systemMessage }: IProviderOptions = {}): IProvider => {
   const options = new ProviderOptions({
     apiKey: apiKey || process.env.OPENAI_API_KEY,
     model: model || process.env.OPENAI_MODEL || 'text-davinci-003',
     basePath: basePath || process.env.OPENAI_BASE_PATH || 'https://api.openai.com/v1',
     maxTokens: Number(maxTokens) || Number(process.env.OPENAI_MAX_TOKENS) || 1000,
     localeMap,
+    systemMessage: systemMessage || process.env.OPENAI_SYSTEM_MESSAGE || 'You are a professional translator.',
   });
   const client = createTranslateClient(options);
 

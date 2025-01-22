@@ -4,6 +4,7 @@ interface OpenAIOptions {
   apiKey: string;
   model: string;
   basePath: string;
+  systemMessage: string;
 }
 
 interface ITranslateOptions {
@@ -32,9 +33,12 @@ class ChatGptTranslator {
       const prompt = `Translate this from ${srcLocale} in to ${targetLocale}:\n\n${text}`;
       const {
         data: { choices },
-      } = await this._getOpenAiClient().createCompletion({
+      } = await this._getOpenAiClient().createChatCompletion({
         model: this._options.model,
-        prompt,
+        messages: [
+          { role: "system", content: this._options.systemMessage },
+          { role: "user", content: prompt }
+        ],
         temperature: 0.3,
         max_tokens: options.maxTokens,
         top_p: 1.0,
@@ -42,7 +46,7 @@ class ChatGptTranslator {
         presence_penalty: 0.0,
       });
       if (choices[0]) {
-        return String(choices[0]?.text).trim();
+        return String(choices[0]?.message?.content).trim();
       }
       throw new Error('No result received');
     } catch (error) {
@@ -70,9 +74,9 @@ class ChatGptTranslator {
   }
 }
 
-const createTranslateClient = ({ apiKey, model, basePath }: OpenAIOptions) => {
+const createTranslateClient = ({ apiKey, model, basePath, systemMessage }: OpenAIOptions) => {
   // TODO basePath.replace(/\/+$/, ""); remove last slash
-  return new ChatGptTranslator({ apiKey, model, basePath });
+  return new ChatGptTranslator({ apiKey, model, basePath, systemMessage });
 };
 
 export { createTranslateClient };
