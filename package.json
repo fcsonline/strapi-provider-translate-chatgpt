@@ -1,5 +1,5 @@
 {
-  "name": "strapi-provider-translate-mdespeuilles",
+  "name": "strapi-provider-translate-chatgpt",
   "version": "1.0.6",
   "description": "Fork of the strapi-provider-translate-chatgpt plugin, originally developed by Braunmann.",
   "keywords": [
@@ -60,7 +60,7 @@
   },
   "peerDependencies": {
     "lodash": "*",
-    "strapi-plugin-translate": "1.2.4"
+    "strapi-plugin-translate": "*"
   },
   "build": "tsc"
 }

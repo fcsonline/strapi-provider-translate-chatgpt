@@ -1,10 +1,5 @@
 # ChatGPT provider for Strapi Translate Plugin
 
-## About this Fork
-
-This is a fork of the [strapi-provider-translate-chatgpt](https://github.com/Braunmann/strapi-provider-translate-chatgpt) plugin by Braunmann. 
-This version includes updates for working with the latest versions of OpenAI API.
-
 Configure the provider through the pluginOptions:
 
 ```js
