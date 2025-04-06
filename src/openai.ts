@@ -37,8 +37,7 @@ class ChatGptTranslator {
           { role: 'user', content: prompt },
         ],
         temperature: 0.3,
-        max_tokens: options.maxTokens,
-        top_p: 1.0,
+        max_completion_tokens: options.maxTokens,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
       });
