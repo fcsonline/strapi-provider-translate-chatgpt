@@ -57,7 +57,7 @@ class ChatGptTranslator {
         case 429:
           throw new Error('Too many requests');
         case 400:
-          throw new Error('Bad request');
+          throw new Error(`Bad request: ${JSON.stringify(error)}`);
         default:
           throw new Error(`translate(): ${JSON.stringify(error)}`);
       }
