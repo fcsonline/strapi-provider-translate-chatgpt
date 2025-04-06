@@ -38,7 +38,7 @@
   "dependencies": {
     "bottleneck": "^2.19.5",
     "chai-as-promised": "^7.1.1",
-    "openai": "^3.2.1"
+    "openai": "^4.91.1"
   },
   "devDependencies": {
     "@strapi/plugin-i18n": "^4.9.1",

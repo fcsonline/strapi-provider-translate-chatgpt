@@ -1,9 +1,8 @@
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 
 interface OpenAIOptions {
   apiKey: string;
   model: string;
-  basePath: string;
   systemMessage: string;
 }
 
@@ -12,14 +11,14 @@ interface ITranslateOptions {
 }
 
 class ChatGptTranslator {
-  private _openAiClient: OpenAIApi | null = null;
+  private _openAiClient: OpenAI | null = null;
   constructor(private readonly _options: OpenAIOptions) {}
 
-  private _getOpenAiClient(): OpenAIApi {
+  private _getOpenAiClient(): OpenAI {
     if (!this._openAiClient) {
-      const configuration = new Configuration(this._options);
-      this._openAiClient = new OpenAIApi(configuration);
+      this._openAiClient = new OpenAI();
     }
+
     return this._openAiClient;
   }
 
@@ -30,14 +29,12 @@ class ChatGptTranslator {
     options: ITranslateOptions,
   ): Promise<string> {
     try {
-      const prompt = `Translate this from ${srcLocale} in to ${targetLocale}:\n\n${text}`;
-      const {
-        data: { choices },
-      } = await this._getOpenAiClient().createChatCompletion({
+      const prompt = `Translate this from '${srcLocale}' in to '${targetLocale}':\n\n\`\`\`\n${text}\n\`\`\``;
+      const completion = await this._getOpenAiClient().chat.completions.create({
         model: this._options.model,
         messages: [
-          { role: "system", content: this._options.systemMessage },
-          { role: "user", content: prompt }
+          { role: 'system', content: this._options.systemMessage },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.3,
         max_tokens: options.maxTokens,
@@ -45,9 +42,11 @@ class ChatGptTranslator {
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
       });
-      if (choices[0]) {
-        return String(choices[0]?.message?.content).trim();
+
+      if (completion.choices[0]) {
+        return String(completion.choices[0]?.message?.content).trim();
       }
+
       throw new Error('No result received');
     } catch (error) {
       // @ts-ignore
@@ -74,9 +73,9 @@ class ChatGptTranslator {
   }
 }
 
-const createTranslateClient = ({ apiKey, model, basePath, systemMessage }: OpenAIOptions) => {
+const createTranslateClient = ({ apiKey, model, systemMessage }: OpenAIOptions) => {
   // TODO basePath.replace(/\/+$/, ""); remove last slash
-  return new ChatGptTranslator({ apiKey, model, basePath, systemMessage });
+  return new ChatGptTranslator({ apiKey, model, systemMessage });
 };
 
 export { createTranslateClient };
